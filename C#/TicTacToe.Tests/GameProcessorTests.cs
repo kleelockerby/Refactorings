@@ -11,8 +11,7 @@ namespace TicTacToe.Tests
 
         public GameProcessorTests()
         {
-            //_sut = new GameProcessor(_boardService, _gameValidations);
-            _sut = new GameProcessor();
+            _sut = new GameProcessor(_boardService, _gameValidations);
         }
 
         //Test Happy Path
@@ -24,8 +23,7 @@ namespace TicTacToe.Tests
             currentPlayerField?.SetValue(_sut, CurrentPlayer.X);
 
             List<int> testboxes = new List<int>() { 1, 3, 5, 9 };
-            MethodInfo? updateBox = typeof(GameProcessor).GetMethod("UpdateBoard", BindingFlags.NonPublic | BindingFlags.Instance);
-            testboxes.ForEach(x => updateBox?.Invoke(_sut, new object[] { x }));
+            testboxes.ForEach(x => _boardService.UpdateBox(x - 1, CurrentPlayer.X.ToString().First()));
 
             MethodInfo? checkWinner = typeof(GameProcessor).GetMethod("CheckWinner", BindingFlags.NonPublic | BindingFlags.Instance);
 

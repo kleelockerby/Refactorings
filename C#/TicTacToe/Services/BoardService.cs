@@ -9,10 +9,7 @@
             Boxes = boxes;
         }
 
-        // public BoardService() : this(new List<char> { GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty })
-        public BoardService() : this(new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' })
-        {
-        }
+        public BoardService() : this(new List<char> { GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty }) { }
 
         public void UpdateBox(int index, char currentPlayerChar)
         {
