@@ -1,0 +1,9 @@
+﻿global using TicTacToe;
+global using NSubstitute;
+global using TicTacToe.Constants;
+global using TicTacToe.Services;
+global using TicTacToe.Validations;
+global using AutoFixture;
+global using System.Reflection;
+global using TicTacToe.Enums;
+global using Shouldly;

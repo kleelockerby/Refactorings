@@ -1,5 +1,4 @@
-﻿
-namespace TicTacToe.Constants 
+﻿namespace TicTacToe.Constants 
 {
     public static class GameConstants
     {
@@ -19,5 +18,7 @@ namespace TicTacToe.Constants
         public const int MaxMoveCount = 9;
         public const int MinMoveCount = 0;
         public const int MaxInputLength = 1;
+
+        public const char BoxEmpty = ' ';
     }
 }

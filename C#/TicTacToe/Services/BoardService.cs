@@ -9,6 +9,11 @@
             Boxes = boxes;
         }
 
+        // public BoardService() : this(new List<char> { GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty })
+        public BoardService() : this(new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' })
+        {
+        }
+
         public void UpdateBox(int index, char currentPlayerChar)
         {
             if (index < GameConstants.MinMoveCount || index >= Boxes.Count)
@@ -34,6 +39,7 @@
                     result = false;
                 }
             });
+
            return result;
         }
 

@@ -4,12 +4,13 @@
     {
         private readonly IBoardService _boardService;
         private readonly IGameValidations _gameValidations;
-        private bool _IsWinner = false;
         private CurrentPlayer _currentPlayer = CurrentPlayer.N;
         private CurrentPlayer _winPlayer = CurrentPlayer.N;
+        private bool _isWinner = false;
         private int _currentMoveCount = 0;
 
-        public GameProcessor() : this(new BoardService(new List<char> { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }), new GameValidations()) { }
+        // public GameProcessor() : this(new BoardService(new List<char> { GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty }), new GameValidations()) { }
+        public GameProcessor() : this(new BoardService(), new GameValidations()) { }
         public GameProcessor(IBoardService boardService, IGameValidations gameValidations)
         {
             _boardService = boardService ?? throw new ArgumentNullException(nameof(boardService));
@@ -31,7 +32,7 @@
                 PrintMessage(GameConstants.AskMove.Replace("%PLAYER%", _currentPlayer.ToString()), true, true);
                 GetInput();
                 CheckWinner();
-                if (_IsWinner)
+                if (_isWinner)
                 {
                     break;
                 }
@@ -95,9 +96,16 @@
             foreach (List<int> combination in winningCombinations)
             {
                 char currentPlayerChar = _currentPlayer.ToString().First();
+
+                bool IsWinningCombination(List<int> combination, char currentPlayer) => _boardService.BoxesContains(combination, currentPlayer) switch
+                {
+                    true => true,
+                    false => false
+                };
+
                 if (IsWinningCombination(combination, currentPlayerChar))
                 {
-                    _IsWinner = true;
+                    _isWinner = true;
                     _winPlayer = _currentPlayer;
                     break;
                 }
@@ -107,7 +115,7 @@
         private void EndGame()
         {
             string message = GameConstants.DisplayEndNoWinner;
-            if (_IsWinner)
+            if (_isWinner)
             {
                 _boardService.PrintBoard();
                 message = GameConstants.DisplayEndWinner.Replace("%PLAYER%", _winPlayer.ToString());
@@ -116,12 +124,6 @@
             Console.ReadKey();
             Environment.Exit(1);
         }
-
-        private bool IsWinningCombination(List<int> combination, char currentPlayer) => _boardService.BoxesContains(combination, currentPlayer) switch
-         {
-             true => true,
-             false => false
-         };
 
         private void PrintMessage(string message, ClearConsoleType clearConsoleType)
         {
