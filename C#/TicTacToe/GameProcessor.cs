@@ -9,7 +9,6 @@
         private bool _isWinner = false;
         private int _currentMoveCount = 0;
 
-        // public GameProcessor() : this(new BoardService(new List<char> { GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty }), new GameValidations()) { }
         public GameProcessor() : this(new BoardService(), new GameValidations()) { }
         public GameProcessor(IBoardService boardService, IGameValidations gameValidations)
         {
