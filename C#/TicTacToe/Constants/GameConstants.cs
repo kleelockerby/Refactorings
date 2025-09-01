@@ -10,9 +10,6 @@ namespace TicTacToe.Constants
 
         public const string DisplayEndWinner = "The winner is %PLAYER%";
         public const string DisplayEndNoWinner = "No one won.";
-
-        //public const string AskMoveX = "What box do you want to place {playerX} in? (1-9)" + NewLine + displayPrompt;
-        //public const string AskMoveY = "What box do you want to place {playerY} in? (1-9)" + NewLine + displayPrompt;
         public const string AskMove = "What box do you want to place %PLAYER% in? (1-9) ";
 
         public const string ErrorNotVacant = "Error: box not vacant!" + NewLine + "Press any key to try again..";
@@ -21,5 +18,6 @@ namespace TicTacToe.Constants
 
         public const int MaxMoveCount = 9;
         public const int MinMoveCount = 0;
+        public const int MaxInputLength = 1;
     }
 }

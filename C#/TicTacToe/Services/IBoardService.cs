@@ -2,9 +2,10 @@
 {
     public interface IBoardService
     {
+        List<char> Boxes { get; }
         void UpdateBox(int index, char currentPlayerChar);
         bool BoxesContains(int boxNo);
-        bool BoxesContains(int boxNo, char player);
+        bool BoxesContains(List<int> boxNos, char player);
         void PrintBoard();
     }
 }

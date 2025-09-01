@@ -21,86 +21,6 @@
             PrintMessage(GameConstants.StartGame, ClearConsoleType.ClearAndSleep);
             SwitchPlayer();
             PlayGame();
-
-            /*
-             //TooDo:
-             ? Get rid of currentPlayer None
-            Overloads for PrintMessage or Message class or MessageBuilder
-            
-            ? CheckWinner switch expression
-
-            Unit Tests
-            Custom Exception in Board Class
-            Make Board Immutable
-            PredicateBuilder - IsValidInput
-            Create DI for Board
-            Can anything be extension method?
-            Update Readme
-
-            public static float ValidAndParsePositiveFloat(string i_StringForValidation)
-            {
-                float parsedFloat = 0;
-                bool isFloat = float.TryParse(i_StringForValidation, out parsedFloat);
-
-                if (!isFloat || parsedFloat < 0)
-                {
-                    throw new FormatException("Invalid answer- only a positive number is allowed");
-                }
-
-                return parsedFloat;
-            }
-
-
-            private readonly Dictionary<string, Passenger> _bookedSeats = new();
-            public IReadOnlyDictionary<string, Passenger> CurrentBookings => _bookedSeats.AsReadOnly();
-
-            private readonly List<IFlightInfo> _flights = new();
-
-            public IEnumerable<IFlightInfo> GetAllFlights()
-            {
-                return _flights.AsReadOnly();
-            }
-
-            private void DisplayBoardingHeader()
-
-            public string BuildMessage(Passenger passenger)
-            {
-                bool isMilitary = passenger.IsMilitary;
-                bool needsHelp = passenger.NeedsHelp;
-                int group = passenger.BoardingGroup;
-
-                return Status switch
-                {
-                    BoardingStatus.PlaneDeparted => "Flight Departed",
-                    BoardingStatus.NotStarted => "Boarding Not Started",
-                    BoardingStatus.Boarding when isMilitary || needsHelp => "Board Now via Priority Lane",
-                    BoardingStatus.Boarding when CurrentBoardingGroup < group => "Please Wait",
-                    BoardingStatus.Boarding when _priorityLaneGroups.Contains(group) => "Board Now via Priority Lane",
-                    BoardingStatus.Boarding => "Board Now",
-                    _ => throw new NotSupportedException($"Unsupported Status {Status}"),
-                };
-            }
-
-            public Passenger(string firstName, string lastName)
-            {
-                FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
-                LastName = lastName ?? throw new ArgumentNullException(nameof(lastName));
-            }
-
-            public override string ToString() => FullName;
-
-            public static class DateHelpers
-            {
-                public static string Format(this DateTime time)
-                {
-                    return time.ToString("ddd MMM dd HH:mm tt");
-                }
-            }
-
-              private IFlightInfo? FindFlightById(string id) => _scheduler.GetAllFlights().FirstOrDefault(f => f.Id == id);
-
-            */
-
         }
 
         private void PlayGame()
@@ -136,18 +56,21 @@
 
         private (bool, string) ValidateInput(string? inputString, out int index)
         {
-            string message = GameConstants.ErrorWrongSelection;
             if (!_gameValidations.IsInRange(inputString, out index))
             {
-                return (false, message);
+                return (false, GameConstants.ErrorWrongSelection);
             }
-            //Out of range exception
-            bool isNotVacant = _boardService.BoxesContains(index - 1);
-            if (isNotVacant)
+
+            if (!_gameValidations.isCorrectInputLength(inputString))
             {
-                message = GameConstants.ErrorNotVacant;
-                return (false, message);
+                return (false, GameConstants.ErrorWrongSelection);
             }
+
+            if (!_gameValidations.IsVacant(inputString!.First(), _boardService.Boxes))
+            {
+                return (false, GameConstants.ErrorNotVacant);
+            }
+
             return (true, string.Empty);
         }
 
@@ -157,7 +80,6 @@
 
         private void CheckWinner()
         {
-            // 123, 456, 789, 147, 258, 369, 159, 357
             List<List<int>> winningCombinations = new List<List<int>>
             {
                 new List<int> {0, 1, 2},
@@ -173,22 +95,17 @@
             foreach (List<int> combination in winningCombinations)
             {
                 char currentPlayerChar = _currentPlayer.ToString().First();
-                //validate input range before calling this method
-                if (_boardService.BoxesContains(combination[0], currentPlayerChar) &&
-                    _boardService.BoxesContains(combination[1], currentPlayerChar) &&
-                    _boardService.BoxesContains(combination[2], currentPlayerChar))
-                    {
-                        _IsWinner = true;
-                        _winPlayer = _currentPlayer;
-                        break;
-                    }
-                    //if (_boardService.BoxesContains(combination, _currentPlayer.ToString().First()))
+                if (IsWinningCombination(combination, currentPlayerChar))
+                {
+                    _IsWinner = true;
+                    _winPlayer = _currentPlayer;
+                    break;
+                }
             }
         }
 
-        public void EndGame()
+        private void EndGame()
         {
-            Console.Clear();
             string message = GameConstants.DisplayEndNoWinner;
             if (_IsWinner)
             {
@@ -199,6 +116,12 @@
             Console.ReadKey();
             Environment.Exit(1);
         }
+
+        private bool IsWinningCombination(List<int> combination, char currentPlayer) => _boardService.BoxesContains(combination, currentPlayer) switch
+         {
+             true => true,
+             false => false
+         };
 
         private void PrintMessage(string message, ClearConsoleType clearConsoleType)
         {
@@ -226,40 +149,3 @@
         }
     }
 }
-
-
-/*
-
-
-private void GetInput()
-        {
-            string? inputString = Console.ReadLine();
-
-            if (!ValidateInput(inputString, out string message, out int index))
-            {
-                PrintMessage(message, true, false);
-                Console.ReadKey();
-                GetInput();
-            }
-            UpdateBoard(index);
-        }
-
-        private bool ValidateInput(string? inputString, out string message, out int index)
-        {
-            message = GameConstants.ErrorWrongSelection;
-            if (!_gameValidations.IsInRange(inputString, out index))
-            {
-                return false;
-            }
-
-            bool isNotVacant = _boardService.BoxesContains(index - 1);
-            if (isNotVacant)
-            {
-                message = GameConstants.ErrorNotVacant;
-                return false;
-            }
-            return true;
-        }
-
-
-}*/

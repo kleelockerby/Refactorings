@@ -3,6 +3,7 @@
     public interface IGameValidations
     {
         bool IsInRange(string? input, out int index);
-        bool IsNotVacant(char inputChar, List<char> boxes);
+        bool isCorrectInputLength(string? input);
+        bool IsVacant(char inputChar, List<char> boxes);
     }
 }

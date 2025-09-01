@@ -24,7 +24,18 @@
 
         public bool BoxesContains(int boxNo) => Boxes[boxNo] == ' ' ? false : true;
 
-        public bool BoxesContains(int boxNo, char player) => Boxes[boxNo] == player ? true : false;
+        public bool BoxesContains(List<int> boxNos, char player)
+        {
+            bool result = true;
+            boxNos.ForEach(x =>
+            {
+                if (Boxes[x] != player)
+                {
+                    result = false;
+                }
+            });
+           return result;
+        }
 
         public void PrintBoard()
         {
@@ -36,20 +47,4 @@
     }
 }
 
-
-
-/*
-public bool BoxesContains(List<int> boxNos, char player)
-{
-    bool result = true;
-    boxNos.ForEach(x =>
-    {
-        if (Boxes[x] != player)
-        {
-            result = false;
-        }
-    });
-    return result;
-}
-*/
 

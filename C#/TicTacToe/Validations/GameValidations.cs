@@ -1,38 +1,19 @@
-﻿
-namespace TicTacToe.Validations
+﻿namespace TicTacToe.Validations
 {
     public class GameValidations : IGameValidations
     {
         public bool IsInRange(string? input, out int index)
         {
-            if (string.IsNullOrEmpty(input))
+            bool isInputInt = input.IsValidInteger(out index);
+            if (index > GameConstants.MaxMoveCount || index <= GameConstants.MinMoveCount)
             {
-                index = -1;
-                return false;
+                throw new ArgumentOutOfRangeException(nameof(index), "Index must be between 0 and 8.");
             }
-            bool isInputInt = IsValidInt(input, out index);
-            if (!isInputInt)
-            {
-                return false;
-            }
-            bool isValid = index <= GameConstants.MaxMoveCount && index > GameConstants.MinMoveCount;
-            index = isValid ? index : -1;
-            return isValid;
+            return true;
         }
 
-        public bool IsNotVacant(char inputChar, List<char> boxes)
-        {
-            return boxes.Contains(inputChar) ? false : true;
-        }
+        public bool isCorrectInputLength(string? input) => input?.Length > GameConstants.MaxInputLength ? false : true;
 
-        private bool IsValidInt(string? input, out int inputInt)
-        {
-            if(int.TryParse(input, out inputInt))
-            {
-                return true;
-            }
-            inputInt = -1;
-            return false;
-        }
+        public bool IsVacant(char inputChar, List<char> boxes) => boxes.Contains(inputChar) ? false : true;
     }
 }
