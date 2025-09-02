@@ -1,11 +1,14 @@
-﻿namespace CSharpRefactorings.TicTacToe
+﻿using TicTacToe.Domain;
+using TicTacToe.State;
+
+namespace CSharpRefactorings.TicTacToe
 {
     public class Program
-    {
+    {     
         static void Main()
         {
-            GameProcessor game = new GameProcessor();
-            game.StartGame();
+            GameManager gameManager = new GameManager();
+            gameManager.PlayGame();
         }
     }
 }

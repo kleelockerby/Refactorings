@@ -7,3 +7,4 @@ global using AutoFixture;
 global using System.Reflection;
 global using TicTacToe.Enums;
 global using Shouldly;
+global using TicTacToe.Domain;

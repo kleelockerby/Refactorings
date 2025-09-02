@@ -1,6 +1,6 @@
 ﻿namespace TicTacToe.Enums
 {
-    public enum CurrentPlayer
+    public enum CurrentPlayerType
     {
         X,
         Y,

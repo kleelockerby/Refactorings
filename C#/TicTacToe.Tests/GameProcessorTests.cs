@@ -1,3 +1,4 @@
+using TicTacToe.Domain;
 using TicTacToe.Enums;
 
 namespace TicTacToe.Tests
@@ -19,17 +20,17 @@ namespace TicTacToe.Tests
         public void CheckWinner_ReturnsTrue_ValidInput()
         {
             //Arrange
-            FieldInfo? currentPlayerField = typeof(GameProcessor).GetField("_currentPlayer", BindingFlags.NonPublic | BindingFlags.Instance);
-            currentPlayerField?.SetValue(_sut, CurrentPlayer.X);
+            FieldInfo? currentPlayerField = typeof(GameManager).GetField("_currentPlayer", BindingFlags.NonPublic | BindingFlags.Instance);
+            currentPlayerField?.SetValue(_sut, CurrentPlayerType.X);
 
             List<int> testboxes = new List<int>() { 1, 3, 5, 9 };
-            testboxes.ForEach(x => _boardService.UpdateBox(x - 1, CurrentPlayer.X.ToString().First()));
+            testboxes.ForEach(x => _boardService.UpdateBox(x - 1, CurrentPlayerType.X.ToString().First()));
 
-            MethodInfo? checkWinner = typeof(GameProcessor).GetMethod("CheckWinner", BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo? checkWinner = typeof(GameManager).GetMethod("CheckWinner", BindingFlags.NonPublic | BindingFlags.Instance);
 
             //Act
             _ = checkWinner?.Invoke(_sut, null)!;
-            FieldInfo? isWinnerInfoField = typeof(GameProcessor).GetField("_isWinner", BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo? isWinnerInfoField = typeof(GameManager).GetField("_isWinner", BindingFlags.NonPublic | BindingFlags.Instance);
             bool? isWinnerValue = (bool)isWinnerInfoField?.GetValue(_sut)!;
 
             //Assert
