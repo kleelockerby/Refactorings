@@ -16,7 +16,6 @@ namespace TicTacToe.Providers
 
         public BaseConsoleProvider()
         {
-            List<char> boxes = new List<char> { GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty };
             //AppState.PropertyChanged += AppState_PropertyChanged;
         }
 

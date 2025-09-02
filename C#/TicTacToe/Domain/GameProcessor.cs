@@ -8,6 +8,8 @@ namespace TicTacToe.Domain
         private readonly IBoardService _boardService;
         private readonly IGameValidations _gameValidations;
 
+        public List<char> Boxes { get; }
+
         public IAppState AppState = new AppState(CurrentPlayerType.N, CurrentPlayerType.N, false,
             new List<char> { GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty },
             string.Empty );
@@ -36,6 +38,7 @@ namespace TicTacToe.Domain
         {
             boardHandler.HandleConsole();
             inputHandler.HandleConsole();
+            //_boardService.PrintBoard();
         }
 
         public void GetInput(ConsoleHandler errorHandler, IConsoleProvider errorProvider)
@@ -135,30 +138,6 @@ namespace TicTacToe.Domain
 
             return (true, string.Empty);
         }
-
-
-
-        private void _appState_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            Console.WriteLine("***********************************  Changed  11111111111");
-            /* switch (e.PropertyName)
-             {
-                 case nameof(IAppState.CurrentPlayer):
-                     this.lastCurrentPlayer = _appState.CurrentPlayer;
-                     break;
-                 case nameof(_appState.WinPlayer):
-                     this.lastWinPlayer = _appState.WinPlayer;
-                     break;
-                 case nameof(_appState.IsWinner):
-                     this.lastIsWinner = _appState.IsWinner;
-                     break;
-                 case nameof(_appState.BoxCells):
-                     this.lastBoxCellNos = _appState.BoxCells;
-                     break;
-                 case nameof(_appState.ErrorMessage):
-                     this.lastErrorMessage = _appState.ErrorMessage;
-                     break;
-             }*/
-        }
+    
     }
 }

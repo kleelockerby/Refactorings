@@ -6,9 +6,12 @@ namespace TicTacToe.Providers
 {
     public class BoardConsoleProvider : BaseConsoleProvider
     {
+        public List<char> Boxes { get; }
+
         public BoardConsoleProvider() : base()
         {
             BuildConsoleInfo();
+            this.Boxes = new List<char> { GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty };
         }
 
         /*public override void HandleConsole()
