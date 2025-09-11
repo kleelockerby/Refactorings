@@ -1,30 +1,33 @@
 ﻿#nullable disable warnings
 namespace TicTacToe.Providers 
 {
-    public class InputConsoleProvider : BaseConsoleProvider
+    public class InputConsoleProvider : ConsoleProviderBase, IConsoleProvider
     {
-        public InputConsoleProvider() : base()
+        public string Name { get; } = ConsoleType.Input.ToString();
+        public ConsoleInfo ConsoleInfo { get; set; }
+
+        public InputConsoleProvider(PlayerStateContainer playerState) : base(playerState)
         {
-            BuildConsoleInfo();
+            ConsoleInfo = new ConsoleInfo(ConsoleType.Input, string.Format(GameConstants.AskMove, PlayerStateContainer.State.CurrentPlayer.ToString()), true, false, true, false);
         }
 
-        public override void HandleConsole()
+        public void HandleConsole()
         {
-            if(GameConsoleInfo.ClearConsole)
+            if (ConsoleInfo.ClearConsole)
             {
                 Console.Clear();
             }
-            string message = GameConsoleInfo.PrefixLNewLine ? GameConstants.NewLine + GameConsoleInfo.Message : GameConsoleInfo.Message;
+            string message = ConsoleInfo.PrefixLNewLine ? GameConstants.NewLine + ConsoleInfo.Message : ConsoleInfo.Message;
             Console.WriteLine(message);
-            if (GameConsoleInfo.DisplayPrompt)
+            if (ConsoleInfo.DisplayPrompt)
             {
                 Console.Write(GameConstants.DisplayPrompt);
             }
         }
-
-        private void BuildConsoleInfo()
+       
+        public void Update(ConsoleInfo info)
         {
-            GameConsoleInfo = new ConsoleInfo(string.Format(GameConstants.AskMove, AppState.CurrentPlayer.ToString()), true, true);
+          
         }
     }
 }

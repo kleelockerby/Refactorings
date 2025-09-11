@@ -1,5 +1,4 @@
-﻿using TicTacToe.Domain;
-using TicTacToe.State;
+﻿
 
 namespace CSharpRefactorings.TicTacToe
 {

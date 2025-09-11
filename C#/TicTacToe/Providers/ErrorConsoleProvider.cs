@@ -2,27 +2,33 @@
 
 namespace TicTacToe.Providers
 {
-    public class ErrorConsoleProvider : BaseConsoleProvider
+    public class ErrorConsoleProvider : ConsoleProviderBase, IConsoleProvider
     {
-        public ErrorConsoleProvider() : base()
+        public string Name { get; } = ConsoleType.Error.ToString();
+        public ConsoleInfo ConsoleInfo { get; set; }
+
+        public ErrorConsoleProvider(PlayerStateContainer playerState) : base(playerState)
         {
-            BuildConsoleInfo();
+            ConsoleInfo = new ConsoleInfo(ConsoleType.Error, string.Empty, false, true, false, true);
         }
 
-        public override void HandleConsole()
+        public void HandleConsole()
         {
-            string messageNewOrOrig = !string.IsNullOrEmpty(this.messageUpdated) ? this.messageUpdated : GameConsoleInfo.Message;
-            string message = GameConsoleInfo.PrefixLNewLine ? GameConstants.NewLine + messageNewOrOrig : GameConsoleInfo.Message;
+            if (ConsoleInfo.ClearConsole)
+            {
+                Console.Clear();
+            }
+            string message = ConsoleInfo.PrefixLNewLine ? GameConstants.NewLine + ConsoleInfo.Message : ConsoleInfo.Message;
             Console.WriteLine(message);
-            if (GameConsoleInfo.DisplayPrompt)
+            if (ConsoleInfo.DisplayPrompt)
             {
                 Console.Write(GameConstants.DisplayPrompt);
             }
         }
 
-        private void BuildConsoleInfo()
+        public void Update(ConsoleInfo consoleInfo)
         {
-            GameConsoleInfo = new ConsoleInfo(GameConstants.ErrorWrongSelection, true, false);
+            ConsoleInfo = consoleInfo;
         }
     }
 }

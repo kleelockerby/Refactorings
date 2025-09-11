@@ -19,6 +19,7 @@
         public const int MaxInputLength = 1;
         public const int MinMoveCount = 0;
 
+        // public const char BoxEmpty = ' ';
         public const char BoxEmpty = ' ';
     }
 }

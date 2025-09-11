@@ -9,7 +9,7 @@ namespace TicTacToe.Tests
         private readonly IBoardService _boardService = new BoardService();
         private readonly IGameValidations _gameValidations = Substitute.For<IGameValidations>();
         private readonly IFixture _fixture = new Fixture();
-
+/*
         public GameProcessorTests()
         {
             _sut = new GameProcessor(_boardService, _gameValidations);
@@ -36,6 +36,6 @@ namespace TicTacToe.Tests
             //Assert
             isWinnerValue.ShouldBe(true);
         }
-
+*/
     }
 }

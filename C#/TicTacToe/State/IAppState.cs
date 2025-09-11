@@ -9,8 +9,8 @@ namespace TicTacToe.State
         CurrentPlayerType? CurrentPlayer { get; set; }
         CurrentPlayerType? WinPlayer { get; set; }
         bool? IsWinner { get; set; }
-        List<char>? BoxCells { get; set; }
         string? ErrorMessage { get; set; }
+        void UpdateBoxes(int index);
         public void OnPropertyChanged([CallerMemberName] string propertyName = null!);
     }
 }

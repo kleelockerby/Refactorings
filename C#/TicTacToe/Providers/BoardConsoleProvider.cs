@@ -1,38 +1,42 @@
 ﻿#nullable disable warnings
 
-using TicTacToe.Constants;
+using System.Text;
 
-namespace TicTacToe.Providers 
+namespace TicTacToe.Providers
 {
-    public class BoardConsoleProvider : BaseConsoleProvider
+    public class BoardConsoleProvider : ConsoleProviderBase, IConsoleProvider
     {
-        public List<char> Boxes { get; }
+        public string Name { get; } = ConsoleType.Board.ToString();
+        public ConsoleInfo ConsoleInfo { get; set; }
 
-        public BoardConsoleProvider() : base()
+        public BoardConsoleProvider(PlayerStateContainer playerState) : base(playerState)
         {
-            BuildConsoleInfo();
-            this.Boxes = new List<char> { GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty };
+            string message = CreateBoard();
+            ConsoleInfo = new ConsoleInfo(ConsoleType.Board, message, false, true, false, true);
         }
 
-        /*public override void HandleConsole()
+        public void HandleConsole()
         {
-            Console.Clear();
-            Console.WriteLine(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator, AppState.BoxCells[0], AppState.BoxCells[1], AppState.BoxCells[2]);
-            Console.WriteLine(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator, AppState.BoxCells[3], AppState.BoxCells[4], AppState.BoxCells[5]);
-            Console.WriteLine(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator + GameConstants.NewLine, AppState.BoxCells[6], AppState.BoxCells[7], AppState.BoxCells[8]);
-        }*/
-
-        public override void HandleConsole()
-        {
-            Console.Clear();
-            Console.WriteLine(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty);
-            Console.WriteLine(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty);
-            Console.WriteLine(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty);
+            if (ConsoleInfo.ClearConsole)
+            {
+                Console.Clear();
+            }
+            Console.WriteLine(ConsoleInfo.Message);
         }
 
-        private void BuildConsoleInfo()
+        public void Update(ConsoleInfo consoleInfo)
         {
-            GameConsoleInfo = new ConsoleInfo(string.Empty, false, true);
+            this.ConsoleInfo = consoleInfo;
+            HandleConsole();
+        }
+
+        private string CreateBoard()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(string.Format(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty));
+            sb.AppendLine(string.Format(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty));
+            sb.AppendLine(string.Format(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty));
+            return sb.ToString();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace TicTacToe.State
@@ -49,7 +50,7 @@ namespace TicTacToe.State
             }
         }
 
-        private List<char>? _boxCells;
+       /* private List<char>? _boxCells;
         public List<char>? BoxCells
         {
             get => _boxCells;
@@ -61,7 +62,7 @@ namespace TicTacToe.State
                     OnPropertyChanged(nameof(BoxCells));
                 }
             }
-        }
+        }*/
 
         private string? _errorMessage;
         public string? ErrorMessage
@@ -77,7 +78,7 @@ namespace TicTacToe.State
             }
         }
 
-        public AppState(CurrentPlayerType? currentPlayer, CurrentPlayerType? winPlayer, bool? isWinner, List<char>? boxes, string? errorMessage)
+        public AppState(CurrentPlayerType? currentPlayer, CurrentPlayerType? winPlayer, bool? isWinner, string? errorMessage)
         {
             _currentPlayer = currentPlayer;
             _winPlayer = winPlayer;
@@ -86,6 +87,21 @@ namespace TicTacToe.State
             _errorMessage = errorMessage;
 
         }
+
+        public void UpdateBoxes(int index)
+        {
+            if (index < GameConstants.MinMoveCount || index >= BoxCells.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), "Index must be between 0 and 8.");
+            }
+            if (BoxCells[index] != ' ')
+            {
+                throw new InvalidOperationException("Box is already occupied.");
+            }
+            BoxCells[index] = CurrentPlayer.ToString().First();
+            OnPropertyChanged(nameof(BoxCells));
+        }
+
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = null!) =>  PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

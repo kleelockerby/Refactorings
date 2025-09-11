@@ -2,8 +2,12 @@
 {
     public interface IConsoleProvider
     {
-        ConsoleInfo? GameConsoleInfo { get; set; }
-        void SetErrorMessage(string errorMessage);
+        string Name { get; }
+        ConsoleInfo ConsoleInfo { get; set; }
         void HandleConsole();
+        void Update(ConsoleInfo consoleInfo);
+        PlayerStateContainer GetStateContainer();
+        //bool IsProperProvider(ConsoleInfo consoleInfo);
+        //string GetProviderType();
     }
 }

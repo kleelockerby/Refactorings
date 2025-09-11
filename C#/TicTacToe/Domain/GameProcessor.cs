@@ -1,68 +1,60 @@
 ﻿#nullable disable warnings
 using System.ComponentModel;
+using System.Security;
+using TicTacToe.Models;
 
 namespace TicTacToe.Domain
 {
     public class GameProcessor
     {
-        private readonly IBoardService _boardService;
         private readonly IGameValidations _gameValidations;
+        private ConsoleProviderFactory _consoleProviderFactory;
+        private BoxCells _boxCells;
+        private readonly PlayerStateContainer _playerStateContainer;
+        private CurrentPlayerType _currentPlayerType;
+        private bool _isWinner;
 
-        public List<char> Boxes { get; }
-
-        public IAppState AppState = new AppState(CurrentPlayerType.N, CurrentPlayerType.N, false,
-            new List<char> { GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty },
-            string.Empty );
-
-       /* private CurrentPlayerType? lastCurrentPlayer;
-        private CurrentPlayerType? lastWinPlayer;
-        private bool? lastIsWinner;
-        private List<char> lastBoxCellNos;
-        private string lastErrorMessage;*/
-
-        public GameProcessor() : this(new BoardService(), new GameValidations()) { }
-        public GameProcessor(IBoardService boardService, IGameValidations gameValidations)
+        public GameProcessor(PlayerStateContainer playerStateContainer) : this(playerStateContainer, new ConsoleProviderFactory(new PlayerStateContainer()), new GameValidations(), new List<char>()) { }
+        public GameProcessor(PlayerStateContainer playerStateContainer, ConsoleProviderFactory providerFactory, IGameValidations gameValidations, List<char> boxCells)
         {
-            _boardService = boardService;
+            _playerStateContainer = playerStateContainer;
+            _consoleProviderFactory = providerFactory;
             _gameValidations = gameValidations;
-           AppState.PropertyChanged += _appState_PropertyChanged;
+            _boxCells = new BoxCells();
         }
 
-        public void StartGame(ConsoleHandler startHandler)
+        public void StartGame()
         {
-            startHandler.HandleConsole();
+            IConsoleProvider startConsoleProvider = _consoleProviderFactory.GetProviderByClientName(ConsoleType.Start.ToString());
+            startConsoleProvider.HandleConsole();
+
             SwitchPlayer();
+
+            PlayerStateContainer playerState = startConsoleProvider.GetStateContainer();      
+            playerState.State = playerState.State with { CurrentPlayer = _playerStateContainer.State.CurrentPlayer };
         }
 
-        public void DrawBoard(ConsoleHandler boardHandler, ConsoleHandler inputHandler)
+        public void GetInput()
         {
-            boardHandler.HandleConsole();
-            inputHandler.HandleConsole();
-            //_boardService.PrintBoard();
-        }
+            IConsoleProvider inputConsoleProvider = _consoleProviderFactory.GetProviderByClientName(ConsoleType.Input.ToString());
+            inputConsoleProvider.HandleConsole();
 
-        public void GetInput(ConsoleHandler errorHandler, IConsoleProvider errorProvider)
-        {
             string? inputString = Console.ReadLine();
-
-            (bool, string) isValid = ValidateInput(inputString, out int boxCellNo);
+            (bool, string) isValid = ValidateInput(inputString, out int index);
             while (!isValid.Item1)
             {
-                errorProvider.SetErrorMessage(isValid.Item2);
-                errorHandler.HandleConsole();
+                string errorMessage = isValid.Item2.ToString();
+                UpdateErrorMessage(errorMessage);
                 Console.ReadKey();
             }
-            UpdateBoard(boxCellNo);
+            _boxCells.UpdateBox(index - 1, _playerStateContainer.State.CurrentPlayer.ToString().First());   //if Boxes.contains
+            string message = _boxCells.CreateMessage();
+            UpdateBoard(message);
         }
 
-        public void SwitchPlayer()
+        public bool CheckWinner()
         {
-           CurrentPlayerType currentPlayerNew = AppState.CurrentPlayer == CurrentPlayerType.Y || AppState.CurrentPlayer == CurrentPlayerType.N ? CurrentPlayerType.X : CurrentPlayerType.Y;
-           AppState.CurrentPlayer = currentPlayerNew;
-        }
-
-        public void CheckWinner()
-        {
+            bool isWinner = false;
             List<List<int>> winningCombinations = new List<List<int>>
             {
                 new List<int> {0, 1, 2},
@@ -77,8 +69,8 @@ namespace TicTacToe.Domain
 
             foreach (List<int> combination in winningCombinations)
             {
-                char currentPlayerChar = AppState.CurrentPlayer.ToString().First();
-                bool IsWinningCombination(List<int> combination, char currentPlayer) => _boardService.BoxesContains(combination, currentPlayer) switch
+                char currentPlayerChar = _currentPlayerType.ToString().First();
+                bool IsWinningCombination(List<int> combination, char currentPlayer) => _boxCells.BoxesContains(combination, currentPlayer) switch
                 {
                     true => true,
                     false => false
@@ -86,28 +78,40 @@ namespace TicTacToe.Domain
 
                 if (IsWinningCombination(combination, currentPlayerChar))
                 {
-                    AppState.IsWinner = true;
-                    AppState.WinPlayer = AppState.CurrentPlayer;
+                    isWinner = false;
                     break;
                 }
             }
+            return isWinner;
         }
 
-        public void EndGame(ConsoleHandler boardHandler, ConsoleHandler endHandler, IConsoleProvider endProvider)
+        public void EndGame()
         {
             string message = GameConstants.DisplayEndNoWinner;
-            if ((bool)AppState.IsWinner)
+            if (_isWinner)
             {
-                boardHandler.HandleConsole();
-                message = string.Format("GameConstants.DisplayEndWinner", AppState.WinPlayer);
+                message = string.Format("GameConstants.DisplayEndWinner", _currentPlayerType);
+                UpdateErrorMessage(message);
+                UpdateBoard(message);
             }
-            endProvider.SetErrorMessage(message);
-            endProvider.HandleConsole();
+
+            UpdateErrorMessage(message);
             Console.ReadKey();
             Environment.Exit(1);
         }
 
-        private void UpdateBoard(int position) => _boardService.UpdateBox(position - 1, AppState.CurrentPlayer.ToString().First());
+        public void SwitchPlayer()
+        {
+            CurrentPlayerType currentPlayerNew = _playerStateContainer.State.CurrentPlayer == CurrentPlayerType.Y || _playerStateContainer.State.CurrentPlayer == CurrentPlayerType.N ? CurrentPlayerType.X : CurrentPlayerType.Y;
+            _playerStateContainer.State = _playerStateContainer.State with { CurrentPlayer = currentPlayerNew };
+        }
+
+        public CurrentPlayerType SwitchPlayer(IConsoleProvider provider)
+        {
+            CurrentPlayerType currentPlayerNew = _currentPlayerType == CurrentPlayerType.Y || provider.ConsoleInfo.CurrentPlayer == CurrentPlayerType.N ? CurrentPlayerType.X : CurrentPlayerType.Y;
+            currentPlayerNew = provider != null ? provider.ConsoleInfo.CurrentPlayer : currentPlayerNew;
+            return currentPlayerNew;
+        }
 
         private (bool, string) ValidateInput(string? inputString, out int boxCellNo)
         {
@@ -131,13 +135,39 @@ namespace TicTacToe.Domain
                 return (false, GameConstants.ErrorWrongSelection);
             }
 
-            if (!_gameValidations.IsVacant(inputString!.First(), _boardService.Boxes))
+            if (!_gameValidations.IsVacant(inputString!.First(), _boxCells.Boxes))
             {
+
                 return (false, GameConstants.ErrorNotVacant);
             }
 
             return (true, string.Empty);
         }
-    
+
+        public void UpdateBoard(string message)
+        {
+            message = message == string.Empty ? _boxCells.CreateMessage() : message;
+            IConsoleProvider boardConsoleProvider = _consoleProviderFactory.GetProviderByClientName(ConsoleType.Board.ToString());
+            // ConsoleInfo consoleInfo = new ConsoleInfo(ConsoleType.Board, message, true, false, false, true);
+            ConsoleInfo consoleInfo = new ConsoleInfo(ConsoleType.Board, message, true, true, false, false);
+            boardConsoleProvider.Update(consoleInfo);
+            boardConsoleProvider.HandleConsole();
+        }
+
+       /* public void UpdateBoard()
+        {
+            IConsoleProvider boardConsoleProvider = _consoleProviderFactory.GetProviderByClientName(ConsoleType.Board.ToString());
+            ConsoleInfo consoleInfo = new ConsoleInfo(ConsoleType.Board, _boxCells.CreateMessage(), true, true, false, false);
+            boardConsoleProvider.Update(consoleInfo);
+            boardConsoleProvider.HandleConsole();
+        }
+*/
+        private void UpdateErrorMessage(string message)
+        {
+            IConsoleProvider errorConsoleProvider = _consoleProviderFactory.GetProviderByClientName(ConsoleType.Input.ToString());
+            ConsoleInfo consoleInfo = new ConsoleInfo(ConsoleType.Error, message, true, true);
+            errorConsoleProvider.Update(consoleInfo);
+            errorConsoleProvider.HandleConsole();
+        }
     }
 }

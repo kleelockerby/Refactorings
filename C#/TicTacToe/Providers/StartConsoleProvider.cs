@@ -1,25 +1,27 @@
-﻿using System.Threading;
-
+﻿#nullable disable warnings
 namespace TicTacToe.Providers
 {
-    public class StartConsoleProvider : BaseConsoleProvider
+    public class StartConsoleProvider : ConsoleProviderBase, IConsoleProvider
     {
-        public StartConsoleProvider() : base()
+        public string Name { get; } = ConsoleType.Start.ToString();
+        public ConsoleInfo ConsoleInfo { get; set; }
+
+        public StartConsoleProvider(PlayerStateContainer playerState) : base(playerState)
         {
-            BuildConsoleInfo();
+            ConsoleInfo = new ConsoleInfo(ConsoleType.Start, GameConstants.StartGame, false, true, false, true);
         }
 
-        public override void HandleConsole()
+        public void HandleConsole()
         {
-            Console.WriteLine(GameConsoleInfo?.Message);
-            Thread.Sleep(1200);
+            Console.WriteLine(ConsoleInfo?.Message);
+            Thread.Sleep(2200);
             Console.Clear();
             Console.WriteLine(GameConstants.NewLine);
         }
 
-        private void BuildConsoleInfo()
+        public void Update(ConsoleInfo info)
         {
-            GameConsoleInfo = new ConsoleInfo(GameConstants.StartGame, false, true, false, true);
+
         }
     }
 }

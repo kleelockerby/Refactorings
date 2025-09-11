@@ -2,32 +2,55 @@
 
 namespace TicTacToe.Providers
 {
-    public class EndConsoleProvider : BaseConsoleProvider
+    public class EndConsoleProvider : ConsoleProviderBase, IConsoleProvider
     {
-        public EndConsoleProvider() : base()
+        public string Name { get; } = ConsoleType.End.ToString();
+        public ConsoleInfo ConsoleInfo { get; set; }
+
+        public EndConsoleProvider(PlayerStateContainer playerState) : base(playerState)
         {
-            BuildConsoleInfo();
+            ConsoleInfo = new ConsoleInfo(ConsoleType.End, string.Empty, false, true, false, true);
         }
 
-        public override void HandleConsole()
+        public void HandleConsole()
         {
-            // string message = (bool)AppState.IsWinner ? string.Format(GameConstants.DisplayEndWinner, AppState.WinPlayer.ToString()) : GameConstants.DisplayEndNoWinner;
-            string message = GameConsoleInfo.Message;
-            if (GameConsoleInfo.ClearConsole)
+            if (ConsoleInfo.ClearConsole)
             {
                 Console.Clear();
             }
-            message = GameConsoleInfo.PrefixLNewLine ? GameConstants.NewLine + message : message;
+            string message = ConsoleInfo.PrefixLNewLine ? GameConstants.NewLine + ConsoleInfo.Message : ConsoleInfo.Message;
             Console.WriteLine(message);
-            if (GameConsoleInfo.DisplayPrompt)
+            if (ConsoleInfo.DisplayPrompt)
             {
                 Console.Write(GameConstants.DisplayPrompt);
             }
         }
 
-        private void BuildConsoleInfo()
+        public void Update(ConsoleInfo info)
         {
-            GameConsoleInfo = new ConsoleInfo(GameConstants.DisplayEndNoWinner, true, false);
+
         }
+
+
+        /* public override void HandleConsole()
+         {
+             // string message = (bool)AppState.IsWinner ? string.Format(GameConstants.DisplayEndWinner, AppState.WinPlayer.ToString()) : GameConstants.DisplayEndNoWinner;
+             string message = GameConsoleInfo.Message;
+             if (GameConsoleInfo.ClearConsole)
+             {
+                 Console.Clear();
+             }
+             message = GameConsoleInfo.PrefixLNewLine ? GameConstants.NewLine + message : message;
+             Console.WriteLine(message);
+             if (GameConsoleInfo.DisplayPrompt)
+             {
+                 Console.Write(GameConstants.DisplayPrompt);
+             }
+         }
+
+         private void BuildConsoleInfo()
+         {
+             GameConsoleInfo = new ConsoleInfo(GameConstants.DisplayEndNoWinner, true, false);
+         }*/
     }
 }

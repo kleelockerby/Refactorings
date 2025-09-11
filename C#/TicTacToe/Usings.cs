@@ -5,4 +5,4 @@ global using TicTacToe.Validations;
 global using TicTacToe.Enums;
 global using TicTacToe.Models;
 global using TicTacToe.Providers;
-global using TicTacToe.State;
+global using TicTacToe.Domain;
