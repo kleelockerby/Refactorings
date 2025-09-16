@@ -24,6 +24,10 @@ I wanted to provided a comprehensive refactoring solution that encompassed the f
         - Refactor classes and methods such that they provide a single responsibility and is easily testable
     - Open Closed Principle
         - Remove lengthy If-Then-Else and switch statements by using provider model and factory method pattern
+    - Interface Segregation Principle
+        - Multiple concise Interfaces
+    - Dependency Inversion Principle
+        - Constructor property injection used
 
 - Unit Tests
     - Provide Unit Tests using XUnit
