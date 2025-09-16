@@ -1,16 +1,31 @@
-# C# refactoring and unit test exercises
+# Kevin Lockerby Solution <br /> C# Refactoring and unit test exercises
 
-Candidate C# Test #1:
-- Clone repository to your local Git/IDE.
-    - If you get "How are you planning to use this Fork?", enter "For my own purposes".  
-- Switch to the 'ReadySetGo_TicTacToe' git branch and create a new git branch called 'Refactor-\<Your Name\>' from it.  
-- Open solution IDE you are most familiar with (Visual Studio, Jetbrains Rider, or VSCODE etc.).
-- Build and run application to understand how it works.
-- Refactor the 'Refactorings\TicTacToe.cs' file.
-    - No need to touch any other existing files. Adding/Modifying new files is fine if needed.
-- Once refactored and compiled with no errors, we will discuss your changes and your thought process.
+I wanted to provided a comprehensive refactoring solution that encompassed the following characteristics
 
-Notes to Candidate:
-- You can refactor this file anyway you would like. The only requirement is that the code runs and works as expected.
-- You may use any IDE you are most familiar with (Visual Studio, Jetbrains Rider, or VSCODE etc.).
-- You will have up to 1 hour to complete the test.
+- Code Smells to look for:
+    - Introducing Locals to replace complex expressions
+    - Promote Local Variable to Parameter
+    - Replace property data value with object (replace string customer name with Customer object)
+    - Wrap parameters/properties into a class
+    - Move common subclass properties/methods to base class
+    - Convert to Expression bodied member
+    - Use nameof() when referencing args
+    - Use guard clauses to throw exceptions (Refactoring with C# p. 231)
+    - Replace Magic Numbers
+    - Use required modifier for properties where relevant
+    - No side effects in methods
+    - No impure method calls
+    - Extract Methods
+    - Replace vars
+    - Immutable State
+ 
+ - Apply Solid Principles:
+    - Single Responsibility Principle
+        - Refactor classes and methods such that they provide a single responsibility and is easily testable
+    - Open Closed Principle
+        - Remove lengthy If-Then-Else and switch statements by using provider model and factory method pattern
+
+- Unit Tests
+    - Provide Unit Tests using XUnit
+    - Used NSubstitute, and Autofixture for mocking and boilerplate
+    - Used Shouldy library for fluent assertions
