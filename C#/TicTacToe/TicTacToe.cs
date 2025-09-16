@@ -1,6 +1,4 @@
-﻿
-
-namespace CSharpRefactorings.TicTacToe
+﻿namespace CSharpRefactorings.TicTacToe
 {
     public class Program
     {     

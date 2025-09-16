@@ -1,42 +1,24 @@
 ﻿#nullable disable warnings
-
 using System.Text;
 
 namespace TicTacToe.Providers
 {
     public class BoardConsoleProvider : ConsoleProviderBase, IConsoleProvider
     {
-        public string Name { get; } = ConsoleType.Board.ToString();
-        public ConsoleInfo ConsoleInfo { get; set; }
-
-        public BoardConsoleProvider(PlayerStateContainer playerState) : base(playerState)
+        public string Name { get; set; } = ConsoleType.Board.ToString();
+        public BoardConsoleProvider()
         {
-            string message = CreateBoard();
-            ConsoleInfo = new ConsoleInfo(ConsoleType.Board, message, false, true, false, true);
+            this.ConsoleModel = new ConsoleModel(ConsoleType.Board, string.Empty, false, false, true);
         }
 
-        public void HandleConsole()
+        public override void HandleConsole(CurrentPlayerType currentPlayer, string message)
         {
-            if (ConsoleInfo.ClearConsole)
+            this.ConsoleModel.Message = message;
+            if (ConsoleModel.ClearConsole)
             {
                 Console.Clear();
             }
-            Console.WriteLine(ConsoleInfo.Message);
-        }
-
-        public void Update(ConsoleInfo consoleInfo)
-        {
-            this.ConsoleInfo = consoleInfo;
-            HandleConsole();
-        }
-
-        private string CreateBoard()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(string.Format(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty));
-            sb.AppendLine(string.Format(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty));
-            sb.AppendLine(string.Format(GameConstants.BoardRow + GameConstants.NewLine + GameConstants.BoardSeparator, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty));
-            return sb.ToString();
+            Console.WriteLine(ConsoleModel.Message);
         }
     }
 }

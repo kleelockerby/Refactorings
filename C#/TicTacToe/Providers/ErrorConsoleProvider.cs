@@ -1,34 +1,31 @@
 ﻿#nullable disable warnings
 
+using System.Diagnostics.Metrics;
+using TicTacToe.Models;
+
 namespace TicTacToe.Providers
 {
     public class ErrorConsoleProvider : ConsoleProviderBase, IConsoleProvider
     {
-        public string Name { get; } = ConsoleType.Error.ToString();
-        public ConsoleInfo ConsoleInfo { get; set; }
+        public string Name { get; set; } = ConsoleType.Error.ToString();
 
-        public ErrorConsoleProvider(PlayerStateContainer playerState) : base(playerState)
+        public ErrorConsoleProvider()
         {
-            ConsoleInfo = new ConsoleInfo(ConsoleType.Error, string.Empty, false, true, false, true);
+            this.ConsoleModel = new ConsoleModel(ConsoleType.Error, string.Empty, true, true);
         }
 
-        public void HandleConsole()
+        public override void HandleConsole(CurrentPlayerType currentPlayer, string message)
         {
-            if (ConsoleInfo.ClearConsole)
+            if (ConsoleModel.ClearConsole)
             {
                 Console.Clear();
             }
-            string message = ConsoleInfo.PrefixLNewLine ? GameConstants.NewLine + ConsoleInfo.Message : ConsoleInfo.Message;
+            this.ConsoleModel.Message = ConsoleModel.PrefixLNewLine ? GameConstants.NewLine + message : message;
             Console.WriteLine(message);
-            if (ConsoleInfo.DisplayPrompt)
+            if (ConsoleModel.DisplayPrompt)
             {
                 Console.Write(GameConstants.DisplayPrompt);
             }
-        }
-
-        public void Update(ConsoleInfo consoleInfo)
-        {
-            ConsoleInfo = consoleInfo;
         }
     }
 }

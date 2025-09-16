@@ -2,11 +2,11 @@
 
 namespace TicTacToe.Models
 {
-    public class BoxCells
+    public class BoxModel
     {
         public List<char> Boxes { get; set; }
 
-        public BoxCells()
+        public BoxModel()
         {
             Boxes = new List<char> { GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty, GameConstants.BoxEmpty };
         }
@@ -24,20 +24,14 @@ namespace TicTacToe.Models
             Boxes[index] = currentPlayerChar;
         }
 
-        public bool BoxesContains(char player)
+        public bool IsEmpty(int index)
         {
-            bool result = true;
-            Boxes.ForEach(x =>
+            if(Boxes[index] != GameConstants.BoxEmpty)
             {
-                if (Boxes[x] != player)
-                {
-                    result = false;
-                }
-            });
-            return result;
+                return false;
+            }
+            return true;
         }
-        
-        public bool BoxesContains(int boxNo) => Boxes[boxNo] == ' ' ? false : true;
 
         public bool BoxesContains(List<int> boxNos, char player)
         {
@@ -51,7 +45,6 @@ namespace TicTacToe.Models
             });
             return result;
         }
-
 
         public string CreateMessage()
         {

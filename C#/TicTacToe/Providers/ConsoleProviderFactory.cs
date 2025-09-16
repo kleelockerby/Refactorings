@@ -4,21 +4,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using TicTacToe.Extensions;
 
 
 namespace TicTacToe.Providers
 {
     public class ConsoleProviderFactory
     {
-        private readonly IDictionary<string, IConsoleProvider> _consoleProviders;
+        public readonly IDictionary<string, IConsoleProvider> _consoleProviders;
 
-        public ConsoleProviderFactory(PlayerStateContainer playerStateContainer)
+        public ConsoleProviderFactory()
         {
             Type consoleProviderType = typeof(IConsoleProvider);
             
             _consoleProviders = consoleProviderType.Assembly.ExportedTypes
                      .Where(x => consoleProviderType.IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
-                     .Select(t => (IConsoleProvider)Activator.CreateInstance(t, playerStateContainer))
+                     .Select(t => (IConsoleProvider)Activator.CreateInstance(t))
                      .ToImmutableDictionary(x => ((IConsoleProvider)x).Name, x => (IConsoleProvider)x);
         }
 

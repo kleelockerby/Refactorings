@@ -4,24 +4,19 @@ namespace TicTacToe.Providers
     public class StartConsoleProvider : ConsoleProviderBase, IConsoleProvider
     {
         public string Name { get; } = ConsoleType.Start.ToString();
-        public ConsoleInfo ConsoleInfo { get; set; }
 
-        public StartConsoleProvider(PlayerStateContainer playerState) : base(playerState)
+        public StartConsoleProvider()
         {
-            ConsoleInfo = new ConsoleInfo(ConsoleType.Start, GameConstants.StartGame, false, true, false, true);
+            this.ConsoleModel = new ConsoleModel(ConsoleType.Start, string.Empty, true, true);
         }
 
-        public void HandleConsole()
+        public override void HandleConsole(CurrentPlayerType currentPlayer, string message)
         {
-            Console.WriteLine(ConsoleInfo?.Message);
-            Thread.Sleep(2200);
+            this.ConsoleModel.Message = GameConstants.StartGame;
+            Console.WriteLine(ConsoleModel?.Message);
+            Thread.Sleep(1200);
             Console.Clear();
             Console.WriteLine(GameConstants.NewLine);
-        }
-
-        public void Update(ConsoleInfo info)
-        {
-
         }
     }
 }

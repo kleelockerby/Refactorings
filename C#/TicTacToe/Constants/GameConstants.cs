@@ -5,7 +5,7 @@
         public const string StartGame = " -- Tic Tac Toe -- ";
         public const string BoardRow = " {0} | {1} | {2} ";
         public const string BoardSeparator = " ---+---+--- ";
-        public const string DisplayPrompt = " > ";
+        public const string DisplayPrompt = "> ";
 
         public const string DisplayEndWinner = "The winner is {0}";
         public const string DisplayEndNoWinner = "No one won.";

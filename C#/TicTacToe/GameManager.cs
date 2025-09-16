@@ -1,9 +1,5 @@
 ﻿#nullable disable warnings
-using System.ComponentModel;
-using System.Security.Cryptography;
-using TicTacToe.Models;
-
-namespace TicTacToe.Domain
+namespace TicTacToe
 {
     public class GameManager
     {
@@ -12,16 +8,17 @@ namespace TicTacToe.Domain
 
         public GameManager()
         {
-            gameProcessor = new GameProcessor(new PlayerStateContainer());
+            gameProcessor = new GameProcessor();
         }
 
         public void PlayGame()
         {
             gameProcessor.StartGame();
+            gameProcessor.SwitchPlayer();
 
             while (currentMoveCount < GameConstants.MaxMoveCount)
             {
-                gameProcessor.UpdateBoard(string.Empty);
+                gameProcessor.PrintBoard();
                 gameProcessor.GetInput();
                 bool isWinner = gameProcessor.CheckWinner();
                 if (isWinner)

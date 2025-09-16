@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿#nullable disable warnings
 namespace TicTacToe.Providers
 {
     public class ConsoleProviderBase
     {
-        protected readonly PlayerStateContainer PlayerStateContainer;
+        public ConsoleModel ConsoleModel { get; set; }
 
-        //public ConsoleProviderBase() : this(new PlayerStateContainer()) { }
-        // public ConsoleProviderBase(PlayerStateContainer playerStateContainer) { _playerStateContainer = playerStateContainer; }
-        public ConsoleProviderBase(PlayerStateContainer playerStateContainer) => PlayerStateContainer = playerStateContainer;
-
-        public PlayerStateContainer GetStateContainer()
+        public virtual void HandleConsole(CurrentPlayerType currentPlayer, string message)
         {
-            return PlayerStateContainer;
+            if (ConsoleModel.ClearConsole)
+            {
+                Console.Clear();
+            }
+            ConsoleModel.Message = ConsoleModel.PrefixLNewLine ? GameConstants.NewLine + message : message;
+            Console.WriteLine(ConsoleModel.Message);
+            if (ConsoleModel.DisplayPrompt)
+            {
+                Console.Write(GameConstants.DisplayPrompt);
+            }
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿namespace TicTacToe.Validations 
+﻿namespace TicTacToe.Services 
 {
     public interface IGameValidations
     {
         bool IsInRange(string? input, out int index);
-        bool IsValidInputCharacter(string? input);
         bool IsCorrectInputLength(string? input);
-        bool IsVacant(char inputChar, List<char> boxes);
+        bool IsVacant(int index, BoxModel boxes);
     }
 }
